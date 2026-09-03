@@ -1,0 +1,263 @@
+---
+import Icon from "./Icon.astro";
+import { siteConfig } from "../config/site";
+import { getNeighborLocations, type Location } from "../data/locations";
+
+type Props = {
+  location: Location;
+  allLocations: Location[];
+};
+
+const { location, allLocations } = Astro.props;
+const nearbyLocations = getNeighborLocations(location);
+
+const slides = [
+  {
+    image: "/images/hero-coucher-soleil.webp",
+    title: location.slug ? location.heroTitle : "Réservez votre Taxi à Toulouse (31)",
+    text: location.slug ? location.heroText : "Voyagez sereinement dans un véhicule moderne et spacieux",
+  },
+  {
+    image: "/images/hero-nuit.webp",
+    title: "Déplacez-vous librement, à toute heure",
+    text: "Un taxi rapide et confortable pour tous vos trajets du quotidien",
+  },
+  {
+    image: "/images/hero-lever-soleil.webp",
+    title: "Vos rendez-vous médicaux en toute sérénité",
+    text: "Transport agréé par la Sécurité sociale, fiable et ponctuel",
+  },
+  {
+    image: "/images/hero-professionnel.webp",
+    title: "Un accompagnement sûr et encadré",
+    text: "Pour les élèves et bénéficiaires du Conseil Départemental",
+  },
+];
+
+const partners = [
+  { src: "/images/partners/bmw.webp", alt: "BMW" },
+  { src: "/images/partners/assurance-maladie.webp", alt: "Assurance Maladie" },
+  { src: "/images/partners/castanet-tolosan.webp", alt: "Ville de Castanet-Tolosan" },
+  { src: "/images/partners/haute-garonne.webp", alt: "Conseil départemental de la Haute-Garonne" },
+  { src: "/images/partners/asei.webp", alt: "ASEI" },
+  { src: "/images/partners/sessad.webp", alt: "SESSAD" },
+  { src: "/images/partners/awone.webp", alt: "Awone" },
+];
+
+const services = [
+  {
+    number: "01",
+    icon: "taxi" as const,
+    title: "Taxi particuliers & professionnels",
+    text: "Trajets du quotidien, déplacements privés ou professionnels et transferts vers les gares ou l’aéroport.",
+    href: "#particulier",
+  },
+  {
+    number: "02",
+    icon: "medical" as const,
+    title: "Taxi conventionné",
+    text: "Transport médical assis sur prescription, avec une prise en charge attentive vers vos lieux de soins.",
+    href: "#vsl",
+  },
+  {
+    number: "03",
+    icon: "school" as const,
+    title: "Transport scolaire",
+    text: "Transport encadré pour les élèves et bénéficiaires des dispositifs du Conseil départemental.",
+    href: "#scolaire",
+  },
+];
+---
+
+<header class="site-header" data-header>
+  <div class="header-top shell">
+    <a class="top-contact" href={`mailto:${siteConfig.email}`}>
+      <Icon name="mail" size={16} />
+      <span>{siteConfig.email}</span>
+    </a>
+    <a class="header-logo" href="/" aria-label="Taxi by Atassi, accueil">
+      <img src="/images/logo.webp" width="500" height="114" alt="Taxi by Atassi" />
+    </a>
+    <span class="header-spacer" aria-hidden="true"></span>
+  </div>
+  <div class="nav-wrap shell">
+    <a class="mobile-nav-logo" href="/" aria-label="Taxi by Atassi, accueil">
+      <img src="/images/logo.webp" width="500" height="114" alt="Taxi by Atassi" />
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav" data-menu-toggle>
+      <Icon name="menu" />
+    </button>
+    <nav id="main-nav" class="main-nav" aria-label="Navigation principale" data-nav>
+      <a href="/">Accueil</a>
+      <a href="#particulier">Taxi Pure</a>
+      <a href="#vsl">Taxi VSL</a>
+      <a href="#scolaire">Transport scolaire</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="nav-phone" href={`https://wa.me/${siteConfig.phoneRaw}`} aria-label={`Contacter Taxi by Atassi au ${siteConfig.phoneDisplay}`}>
+      <span class="nav-phone-icon"><Icon name="whatsapp" size={26} /></span>
+      <span>+33636376596</span>
+    </a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-label="Présentation" data-hero>
+    {slides.map((slide, index) => (
+      <article class:list={["hero-slide", { active: index === 0 }]} data-hero-slide aria-hidden={index === 0 ? "false" : "true"}>
+        <img src={slide.image} width="1368" height="768" alt="" fetchpriority={index === 0 ? "high" : "auto"} loading={index === 0 ? "eager" : "lazy"} />
+        <div class="hero-overlay"></div>
+        <div class="hero-content shell">
+          {index === 0 ? <h1>{slide.title}</h1> : <h2>{slide.title}</h2>}
+          <p class="hero-copy">{slide.text}</p>
+          <a class="button button-primary hero-button" href="#reservation">Réserver maintenant</a>
+        </div>
+      </article>
+    ))}
+    <button class="hero-arrow hero-prev" type="button" aria-label="Voir le visuel précédent" data-hero-prev><Icon name="arrow" size={36} /></button>
+    <button class="hero-arrow hero-next" type="button" aria-label="Voir le visuel suivant" data-hero-next><Icon name="arrow" size={36} /></button>
+  </section>
+
+  <section class="partners" aria-labelledby="partners-title">
+    <div class="section-heading shell reveal">
+      <p class="eyebrow">Ils nous font confiance</p>
+      <h2 id="partners-title">Nos partenaires</h2>
+    </div>
+    <div class="partner-marquee" data-marquee>
+      <div class="partner-track">
+        {[...partners, ...partners].map((partner, index) => (
+          <div class="partner-logo" aria-hidden={index >= partners.length ? "true" : undefined}>
+            <img src={partner.src} width="300" height="300" alt={index < partners.length ? partner.alt : ""} loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="reservation" class="reservation dark-section">
+    <div class="reservation-inner shell">
+      <div class="reservation-copy reveal">
+        <p class="eyebrow light">Vous cherchez un taxi ?</p>
+        <h2>Réservez votre course</h2>
+        <p>Indiquez vos informations, nous vous répondrons dans le plus bref délai.</p>
+        <div class="availability"><span class="status-pulse"></span> Réservation simple et directe via WhatsApp</div>
+      </div>
+      <form class="booking-form reveal" data-booking-form>
+        <label><span>Votre nom</span><input type="text" name="name" autocomplete="name" placeholder="Votre nom" required /></label>
+        <label><span>Votre téléphone</span><input type="tel" name="phone" autocomplete="tel" placeholder="Votre téléphone" required /></label>
+        <label><span>Nombre de passagers</span><input type="number" name="passengers" min="1" max="8" placeholder="Nombre de passagers" required /></label>
+        <label><span>Adresse de départ</span><input type="text" name="departure" autocomplete="street-address" placeholder="Adresse de départ" required /></label>
+        <label><span>Adresse d’arrivée</span><input type="text" name="arrival" placeholder="Adresse d’arrivée" required /></label>
+        <label><span>Date souhaitée</span><input type="date" name="date" required /></label>
+        <label><span>Heure souhaitée</span><input type="time" name="time" required /></label>
+        <button class="button button-primary booking-submit" type="submit">Réserver maintenant <Icon name="arrow" size={19} /></button>
+        <p class="form-note" data-form-note aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="services" aria-labelledby="services-title">
+    <div class="section-heading shell reveal">
+      <p class="eyebrow">Des prestations adaptées à tous vos besoins</p>
+      <h2 id="services-title">Nos services à votre disposition</h2>
+    </div>
+    <div class="service-grid shell">
+      {services.map((service) => (
+        <a class="service-card reveal" href={service.href}>
+          <div class="service-card-top"><span>{service.number}</span><Icon name={service.icon} size={44} /></div>
+          <h3>{service.title}</h3>
+          <p>{service.text}</p>
+          <span class="service-link">Découvrir <Icon name="arrow" size={18} /></span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="service-details shell">
+    <article id="particulier" class="detail-row reveal">
+      <div class="detail-copy">
+        <p class="eyebrow">Vos trajets du quotidien</p>
+        <h2>Taxi particuliers<br />et professionnels</h2>
+        <p>Notre service de taxi classique répond à vos déplacements personnels ou professionnels dans {location.city}, Toulouse et leurs environs : trajets urbains, interurbains, transferts vers les gares ou l’aéroport de Blagnac, rendez-vous ponctuels et sorties.</p>
+        <ul class="check-list">
+          <li><Icon name="check" size={18} /> Véhicule BMW moderne et confortable</li>
+          <li><Icon name="check" size={18} /> Réservation anticipée ou demande immédiate</li>
+          <li><Icon name="check" size={18} /> Chauffeur professionnel, discret et ponctuel</li>
+        </ul>
+        <a class="text-link" href="#reservation">Organiser mon trajet <Icon name="arrow" size={18} /></a>
+      </div>
+      <figure class="detail-media"><img src="/images/service-taxi.webp" width="1024" height="1024" alt="Véhicule Taxi by Atassi à Toulouse" loading="lazy" /><span class="media-index">01</span></figure>
+    </article>
+
+    <article id="vsl" class="detail-row reverse reveal">
+      <div class="detail-copy">
+        <p class="eyebrow">Pour vos rendez-vous médicaux</p>
+        <h2>Taxi conventionné</h2>
+        <p>Conventionné par l’Assurance Maladie, Taxi by Atassi assure les transports médicaux assis vers les hôpitaux, cliniques, cabinets médicaux et centres de soins. Ce service est destiné aux patients disposant d’une prescription médicale de transport.</p>
+        <p>Les trajets sont réalisés dans un cadre calme et respectueux, avec une attention particulière portée aux personnes fragiles ou à mobilité réduite.</p>
+        <a class="text-link" href="#reservation">Préparer mon transport <Icon name="arrow" size={18} /></a>
+      </div>
+      <figure class="detail-media"><img src="/images/service-medical.webp" width="1200" height="1024" alt="Accompagnement pour un transport médical conventionné" loading="lazy" /><span class="media-index">02</span></figure>
+    </article>
+
+    <article id="scolaire" class="detail-row reveal">
+      <div class="detail-copy">
+        <p class="eyebrow">Un transport sûr et encadré</p>
+        <h2>Transport scolaire</h2>
+        <p>Nous travaillons avec le Conseil départemental de la Haute-Garonne pour accompagner des enfants en situation de handicap ou des bénéficiaires de dispositifs d’accompagnement social.</p>
+        <p>Les trajets sont planifiés avec rigueur, dans le respect des horaires scolaires, médicaux ou administratifs, afin d’offrir un service stable et rassurant aux usagers comme à leurs proches.</p>
+        <a class="text-link" href="#reservation">Échanger sur vos besoins <Icon name="arrow" size={18} /></a>
+      </div>
+      <figure class="detail-media"><img src="/images/service-scolaire.webp" width="1024" height="1024" alt="Transport scolaire accompagné en Haute-Garonne" loading="lazy" /><span class="media-index">03</span></figure>
+    </article>
+  </section>
+
+  <section class="local-zone">
+    <div class="local-zone-inner shell reveal">
+      <div><p class="eyebrow light">Ancrage local</p><h2>{location.localTitle}</h2></div>
+      <div><p>{location.localText}</p>{nearbyLocations.length > 0 && <p class="nearby-links">À proximité : {nearbyLocations.map((item, index) => <><a href={item.url}>{item.city}</a>{index < nearbyLocations.length - 1 && <span> · </span>}</>)}</p>}</div>
+    </div>
+  </section>
+
+  <section class="why-us dark-section" aria-labelledby="why-title">
+    <div class="section-heading shell reveal"><p class="eyebrow light">Voyagez l’esprit libre</p><h2 id="why-title">Pourquoi choisir Taxi by Atassi ?</h2></div>
+    <div class="benefit-grid shell">
+      <article class="benefit reveal"><span class="benefit-icon"><Icon name="shield" size={34} /></span><h3>Sécurité avant tout</h3><p>Un véhicule entretenu avec rigueur et des trajets réalisés dans des conditions sereines.</p></article>
+      <article class="benefit reveal"><span class="benefit-icon"><Icon name="user" size={34} /></span><h3>Chauffeur professionnel</h3><p>Une conduite attentive, courtoise et discrète, adaptée à chaque passager.</p></article>
+      <article class="benefit reveal"><span class="benefit-icon"><Icon name="clock" size={34} /></span><h3>Ponctualité</h3><p>Chaque prise en charge est organisée avec soin pour respecter votre emploi du temps.</p></article>
+    </div>
+  </section>
+
+  <section class="figures" aria-labelledby="figures-title">
+    <div class="section-heading shell reveal"><p class="eyebrow">Un service disponible et polyvalent</p><h2 id="figures-title">L’essentiel, en un coup d’œil</h2></div>
+    <div class="figure-grid shell">
+      <div class="figure-card reveal"><strong>24h/24</strong><span>Disponibilité</span></div>
+      <div class="figure-card reveal"><strong>7j/7</strong><span>À votre service</span></div>
+      <div class="figure-card reveal"><strong>3</strong><span>Types de transport</span></div>
+      <div class="figure-card reveal"><strong>31</strong><span>Haute-Garonne</span></div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <img src="/images/hero-coucher-soleil.webp" width="1368" height="768" alt="" loading="lazy" />
+    <div class="final-cta-overlay"></div>
+    <div class="final-cta-content shell reveal"><p class="eyebrow light">Un trajet à organiser ?</p><h2>Réservez votre taxi<br />pour votre prochain déplacement</h2><div class="hero-actions"><a class="button button-primary" href="#reservation">Je réserve ma course <Icon name="arrow" size={19} /></a><a class="button button-ghost" href={`tel:${siteConfig.phoneInternational}`}><Icon name="phone" size={19} /> {siteConfig.phoneDisplay}</a></div></div>
+  </section>
+</main>
+
+<footer id="contact" class="site-footer">
+  <div class="footer-grid shell">
+    <div class="footer-brand"><img src="/images/logo.webp" width="500" height="114" alt="Taxi by Atassi" /><p>Service de taxi professionnel disponible 24h/24 pour les transports classiques, médicaux et scolaires.</p><a class="footer-social" href={siteConfig.instagram} target="_blank" rel="noreferrer" aria-label="Taxi by Atassi sur Instagram">Instagram ↗</a></div>
+    <div><h2>Services</h2><ul><li><a href="#particulier">Taxi classique</a></li><li><a href="#vsl">Taxi conventionné</a></li><li><a href="#scolaire">Transport scolaire</a></li><li><a href="#reservation">Réserver une course</a></li></ul></div>
+    <div><h2>Zones desservies</h2><ul>{allLocations.map((item) => <li><a href={item.url}>Taxi {item.city}</a></li>)}</ul></div>
+    <div><h2>Contact</h2><address><span>{siteConfig.address}</span><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a><a href={`tel:${siteConfig.phoneInternational}`}>{siteConfig.phoneDisplay}</a></address></div>
+  </div>
+  <div class="footer-bottom shell"><span>© {new Date().getFullYear()} Taxi by Atassi</span><span>Conçu avec soin par <a href="https://www.awone.fr/" target="_blank" rel="noreferrer">Awone</a></span></div>
+</footer>
+
+<a class="mobile-call" href={`tel:${siteConfig.phoneInternational}`}><Icon name="phone" size={20} /><span>Appeler maintenant</span></a>
+<button class="back-to-top" type="button" aria-label="Revenir en haut" data-back-to-top>↑</button>
+
+<script>
+  import "../scripts/landing";
+</script>

@@ -1,0 +1,56 @@
+---
+import { siteConfig } from "../config/site";
+import "@fontsource/poppins/latin-400.css";
+import "@fontsource/poppins/latin-500.css";
+import "@fontsource/poppins/latin-600.css";
+import "../styles/global.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+};
+
+const {
+  title = siteConfig.name,
+  description,
+  image = "/images/hero-nuit.webp",
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? siteConfig.url);
+const socialImage = new URL(image, Astro.site ?? siteConfig.url);
+---
+
+<!doctype html>
+<html lang={siteConfig.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#011435" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/images/logo.png" />
+    <link rel="preload" href="/fonts/oswald-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={socialImage} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
