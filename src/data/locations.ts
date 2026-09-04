@@ -11,6 +11,22 @@ export type Location = {
   nearbySlugs: string[];
 };
 
+export type ServiceArea = {
+  label: string;
+  url?: string;
+};
+
+export const serviceAreas: ServiceArea[] = [
+  { label: "Taxi Castanet-Tolosan", url: "/" },
+  { label: "Taxi Toulouse et ses environs", url: "/taxi-toulouse/" },
+  { label: "Taxi Aéroport Toulouse-Blagnac", url: "/taxi-blagnac/" },
+  { label: "Taxi Gare Toulouse-Matabiau" },
+  { label: "Taxi Labège – Innopole – Diagora" },
+  { label: "Taxi Hôpital Rangueil – Larrey" },
+  { label: "Taxi Ramonville-Saint-Agne – Métro Ramonville" },
+  { label: "Taxi MEETT – Parc des Expositions Toulouse" },
+];
+
 export const locations: Location[] = [
   {
     slug: "",
