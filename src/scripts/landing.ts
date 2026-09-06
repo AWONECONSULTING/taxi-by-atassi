@@ -4,8 +4,14 @@ const PHONE = "33636376596";
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const DESKTOP_SMOOTH_SCROLL = "(min-width: 1024px) and (pointer: fine)";
 const TABLET = "(min-width: 561px) and (max-width: 840px)";
+const MOBILE = "(max-width: 840px)";
 
 document.documentElement.classList.add("js");
+
+const pageScroll = document.querySelector<HTMLElement>("[data-page-scroll]");
+const scrollSource: Window | HTMLElement = window.matchMedia(MOBILE).matches && pageScroll ? pageScroll : window;
+const getScrollTop = () => scrollSource instanceof Window ? window.scrollY : scrollSource.scrollTop;
+const listenToScroll = (listener: EventListener) => scrollSource.addEventListener("scroll", listener, { passive: true });
 
 function setupSmoothScroll() {
   const desktopMedia = window.matchMedia(DESKTOP_SMOOTH_SCROLL);
@@ -50,34 +56,9 @@ function setupSmoothScroll() {
 }
 
 function setupHeader() {
-  const header = document.querySelector<HTMLElement>("[data-header]");
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const nav = document.querySelector<HTMLElement>("[data-nav]");
-  if (!header || !toggle || !nav) return;
-
-  const tabletMedia = window.matchMedia(TABLET);
-  let headerFrame = 0;
-  const hasScrolled = () => window.scrollY > (tabletMedia.matches ? 8 : 90);
-  let isScrolled = hasScrolled();
-  let viewportOffset = -1;
-  const renderHeader = () => {
-    headerFrame = 0;
-    const nextScrolled = hasScrolled();
-    if (nextScrolled !== isScrolled) {
-      isScrolled = nextScrolled;
-      header.classList.toggle("scrolled", isScrolled);
-    }
-
-    const nextViewportOffset = tabletMedia.matches ? window.visualViewport?.offsetTop ?? 0 : 0;
-    if (nextViewportOffset !== viewportOffset) {
-      viewportOffset = nextViewportOffset;
-      header.style.setProperty("--visual-viewport-offset", `${viewportOffset}px`);
-    }
-  };
-  const updateHeader = () => {
-    if (headerFrame) return;
-    headerFrame = window.requestAnimationFrame(renderHeader);
-  };
+  if (!toggle || !nav) return;
   const closeMenu = () => {
     nav.classList.remove("open");
     toggle.setAttribute("aria-expanded", "false");
@@ -93,12 +74,6 @@ function setupHeader() {
   });
 
   nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
-  window.addEventListener("scroll", updateHeader, { passive: true });
-  window.visualViewport?.addEventListener("scroll", updateHeader, { passive: true });
-  window.visualViewport?.addEventListener("resize", updateHeader, { passive: true });
-  tabletMedia.addEventListener("change", updateHeader);
-  header.classList.toggle("scrolled", isScrolled);
-  renderHeader();
 }
 
 function setupHero() {
@@ -188,7 +163,7 @@ function setupHeroParallax() {
     if (!frame) frame = window.requestAnimationFrame(render);
   };
 
-  window.addEventListener("scroll", requestRender, { passive: true });
+  listenToScroll(requestRender);
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
   compactMedia.addEventListener("change", requestRender);
@@ -224,7 +199,7 @@ function setupFinalCtaParallax() {
     if (!frame) frame = window.requestAnimationFrame(render);
   };
 
-  window.addEventListener("scroll", requestRender, { passive: true });
+  listenToScroll(requestRender);
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
   render();
@@ -336,7 +311,7 @@ function setupServicesPanel() {
     if (!frame) frame = window.requestAnimationFrame(render);
   };
 
-  window.addEventListener("scroll", requestRender, { passive: true });
+  listenToScroll(requestRender);
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
   render();
@@ -347,7 +322,7 @@ function setupDetailMediaMotion() {
   if (!rows.length) return;
 
   const reducedMotionMedia = window.matchMedia(REDUCED_MOTION);
-  const tabletMedia = window.matchMedia(TABLET);
+  const compactMedia = window.matchMedia(MOBILE);
   let frame = 0;
 
   const render = () => {
@@ -392,7 +367,7 @@ function setupDetailMediaMotion() {
       media.style.setProperty("--detail-index-opacity", indexProgress.toFixed(3));
       media.style.setProperty("--detail-index-scale", (0.9 + indexProgress * 0.1).toFixed(3));
 
-      if (card && tabletMedia.matches) {
+      if (card && compactMedia.matches) {
         const cardTop = card.getBoundingClientRect().top;
         const cardStart = window.innerHeight * 0.8;
         const cardEnd = window.innerHeight * 0.48;
@@ -413,10 +388,10 @@ function setupDetailMediaMotion() {
     if (!frame) frame = window.requestAnimationFrame(render);
   };
 
-  window.addEventListener("scroll", requestRender, { passive: true });
+  listenToScroll(requestRender);
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
-  tabletMedia.addEventListener("change", requestRender);
+  compactMedia.addEventListener("change", requestRender);
   render();
 }
 
@@ -475,7 +450,7 @@ function setupSectionBridgeMotion() {
     if (!frame) frame = window.requestAnimationFrame(render);
   };
 
-  window.addEventListener("scroll", requestRender, { passive: true });
+  listenToScroll(requestRender);
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
   tabletMedia.addEventListener("change", requestRender);
@@ -640,9 +615,9 @@ function setupBackToTop() {
   const button = document.querySelector<HTMLButtonElement>("[data-back-to-top]");
   if (!button) return;
 
-  const update = () => button.classList.toggle("visible", window.scrollY > 700);
-  button.addEventListener("click", () => window.scrollTo({ top: 0, behavior: window.matchMedia(REDUCED_MOTION).matches ? "auto" : "smooth" }));
-  window.addEventListener("scroll", update, { passive: true });
+  const update = () => button.classList.toggle("visible", getScrollTop() > 700);
+  button.addEventListener("click", () => scrollSource.scrollTo({ top: 0, behavior: window.matchMedia(REDUCED_MOTION).matches ? "auto" : "smooth" }));
+  listenToScroll(update);
   update();
 }
 
