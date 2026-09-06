@@ -21,10 +21,7 @@ export function createTaxiServiceJsonLd(location: Location) {
       addressLocality: "Castanet-Tolosan",
       addressCountry: "FR",
     },
-    areaServed: {
-      "@type": "City",
-      name: location.city,
-    },
+    areaServed: location.city,
     availableLanguage: "fr",
   };
 }

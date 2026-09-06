@@ -3,6 +3,7 @@ import Lenis from "lenis";
 const PHONE = "33636376596";
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const DESKTOP_SMOOTH_SCROLL = "(min-width: 1024px) and (pointer: fine)";
+const TABLET = "(min-width: 561px) and (max-width: 840px)";
 
 document.documentElement.classList.add("js");
 
@@ -54,7 +55,29 @@ function setupHeader() {
   const nav = document.querySelector<HTMLElement>("[data-nav]");
   if (!header || !toggle || !nav) return;
 
-  const updateHeader = () => header.classList.toggle("scrolled", window.scrollY > 90);
+  const tabletMedia = window.matchMedia(TABLET);
+  let headerFrame = 0;
+  const hasScrolled = () => window.scrollY > (tabletMedia.matches ? 8 : 90);
+  let isScrolled = hasScrolled();
+  let viewportOffset = -1;
+  const renderHeader = () => {
+    headerFrame = 0;
+    const nextScrolled = hasScrolled();
+    if (nextScrolled !== isScrolled) {
+      isScrolled = nextScrolled;
+      header.classList.toggle("scrolled", isScrolled);
+    }
+
+    const nextViewportOffset = tabletMedia.matches ? window.visualViewport?.offsetTop ?? 0 : 0;
+    if (nextViewportOffset !== viewportOffset) {
+      viewportOffset = nextViewportOffset;
+      header.style.setProperty("--visual-viewport-offset", `${viewportOffset}px`);
+    }
+  };
+  const updateHeader = () => {
+    if (headerFrame) return;
+    headerFrame = window.requestAnimationFrame(renderHeader);
+  };
   const closeMenu = () => {
     nav.classList.remove("open");
     toggle.setAttribute("aria-expanded", "false");
@@ -71,7 +94,11 @@ function setupHeader() {
 
   nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
   window.addEventListener("scroll", updateHeader, { passive: true });
-  updateHeader();
+  window.visualViewport?.addEventListener("scroll", updateHeader, { passive: true });
+  window.visualViewport?.addEventListener("resize", updateHeader, { passive: true });
+  tabletMedia.addEventListener("change", updateHeader);
+  header.classList.toggle("scrolled", isScrolled);
+  renderHeader();
 }
 
 function setupHero() {
@@ -130,6 +157,7 @@ function setupHeroParallax() {
   if (!hero) return;
 
   const reducedMotionMedia = window.matchMedia(REDUCED_MOTION);
+  const compactMedia = window.matchMedia("(max-width: 840px)");
   let frame = 0;
 
   const render = () => {
@@ -145,7 +173,9 @@ function setupHeroParallax() {
     const bounds = hero.getBoundingClientRect();
     const progress = Math.min(1, Math.max(0, -bounds.top / bounds.height));
     const parallaxDistance = Math.min(bounds.height * 0.2, 220);
-    const parallaxScale = 1.24 + progress * 0.24;
+    const parallaxScale = compactMedia.matches
+      ? 1.08 + progress * 0.12
+      : 1.24 + progress * 0.24;
     const fadeProgress = Math.min(1, progress / 0.5);
     const contentOpacity = (1 - fadeProgress) ** 1.35;
 
@@ -161,6 +191,7 @@ function setupHeroParallax() {
   window.addEventListener("scroll", requestRender, { passive: true });
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
+  compactMedia.addEventListener("change", requestRender);
   render();
 }
 
@@ -316,6 +347,7 @@ function setupDetailMediaMotion() {
   if (!rows.length) return;
 
   const reducedMotionMedia = window.matchMedia(REDUCED_MOTION);
+  const tabletMedia = window.matchMedia(TABLET);
   let frame = 0;
 
   const render = () => {
@@ -323,6 +355,7 @@ function setupDetailMediaMotion() {
 
     rows.forEach((row) => {
       const media = row.querySelector<HTMLElement>(".detail-media");
+      const card = row.querySelector<HTMLElement>(".detail-copy");
       if (!media) return;
 
       if (reducedMotionMedia.matches) {
@@ -332,6 +365,8 @@ function setupDetailMediaMotion() {
         media.style.removeProperty("--detail-index-x");
         media.style.removeProperty("--detail-index-opacity");
         media.style.removeProperty("--detail-index-scale");
+        card?.style.removeProperty("--detail-card-x");
+        card?.style.removeProperty("--detail-card-opacity");
         return;
       }
 
@@ -356,6 +391,21 @@ function setupDetailMediaMotion() {
       media.style.setProperty("--detail-index-x", `${(1 - indexProgress) * indexOffset}px`);
       media.style.setProperty("--detail-index-opacity", indexProgress.toFixed(3));
       media.style.setProperty("--detail-index-scale", (0.9 + indexProgress * 0.1).toFixed(3));
+
+      if (card && tabletMedia.matches) {
+        const cardTop = card.getBoundingClientRect().top;
+        const cardStart = window.innerHeight * 0.8;
+        const cardEnd = window.innerHeight * 0.48;
+        const rawCardProgress = Math.min(1, Math.max(0, (cardStart - cardTop) / (cardStart - cardEnd)));
+        const cardProgress = rawCardProgress * rawCardProgress * (3 - 2 * rawCardProgress);
+        const cardDirection = isReverse ? 1 : -1;
+
+        card.style.setProperty("--detail-card-x", `${(1 - cardProgress) * cardDirection * 42}px`);
+        card.style.setProperty("--detail-card-opacity", cardProgress.toFixed(3));
+      } else {
+        card?.style.removeProperty("--detail-card-x");
+        card?.style.removeProperty("--detail-card-opacity");
+      }
     });
   };
 
@@ -366,6 +416,7 @@ function setupDetailMediaMotion() {
   window.addEventListener("scroll", requestRender, { passive: true });
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
+  tabletMedia.addEventListener("change", requestRender);
   render();
 }
 
@@ -374,6 +425,7 @@ function setupSectionBridgeMotion() {
   if (!bridge) return;
 
   const reducedMotionMedia = window.matchMedia(REDUCED_MOTION);
+  const tabletMedia = window.matchMedia(TABLET);
   let frame = 0;
 
   const render = () => {
@@ -396,8 +448,8 @@ function setupSectionBridgeMotion() {
     }
 
     const center = bridge.getBoundingClientRect().top;
-    const start = window.innerHeight * 0.96;
-    const end = window.innerHeight * 0.42;
+    const start = window.innerHeight * (tabletMedia.matches ? 0.8 : 0.96);
+    const end = window.innerHeight * (tabletMedia.matches ? 0.34 : 0.42);
     const progress = Math.min(1, Math.max(0, (start - center) / (start - end)));
     const lineProgress = Math.min(1, progress / 0.58);
     const rawOutlineProgress = Math.min(1, Math.max(0, (progress - 0.58) / 0.24));
@@ -426,6 +478,7 @@ function setupSectionBridgeMotion() {
   window.addEventListener("scroll", requestRender, { passive: true });
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
+  tabletMedia.addEventListener("change", requestRender);
   render();
 }
 
@@ -558,16 +611,23 @@ function setupBookingForm() {
     if (!form.reportValidity()) return;
 
     const data = new FormData(form);
+    const name = String(data.get("name"));
+    const date = String(data.get("date")).split("-").reverse().join("/");
     const message = [
-      "Bonjour Taxi by Atassi, je souhaite réserver une course.",
+      "Bonjour,",
       "",
-      `Nom : ${data.get("name")}`,
-      `Téléphone : ${data.get("phone")}`,
-      `Passagers : ${data.get("passengers")}`,
-      `Départ : ${data.get("departure")}`,
-      `Arrivée : ${data.get("arrival")}`,
-      `Date : ${data.get("date")}`,
-      `Heure : ${data.get("time")}`,
+      "Voici ma demande de réservation 😊 :",
+      "",
+      `📛 *Nom* : ${name}`,
+      `📞 *Téléphone* : ${data.get("phone")}`,
+      `👥 *Nombre de passagers* : ${data.get("passengers")}`,
+      `📍 *Départ* : ${data.get("departure")}`,
+      `🏁 *Arrivée* : ${data.get("arrival")}`,
+      `📅 *Date* : ${date}`,
+      `⏰ *Heure* : ${data.get("time")}`,
+      "",
+      "Merci,",
+      name,
     ].join("\n");
 
     const note = form.querySelector<HTMLElement>("[data-form-note]");

@@ -1,11 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import LandingPage from "../components/LandingPage.astro";
-import { locations, mainLocation } from "../data/locations";
+import { mainLocation } from "../data/locations";
 import { createTaxiServiceJsonLd } from "../utils/seo";
 ---
 
 <BaseLayout title={mainLocation.title} description={mainLocation.description}>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(createTaxiServiceJsonLd(mainLocation))}></script>
-  <LandingPage location={mainLocation} allLocations={locations} />
+  <LandingPage location={mainLocation} />
 </BaseLayout>

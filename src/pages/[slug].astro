@@ -1,6 +1,6 @@
 ---
 import LandingPage from "../components/LandingPage.astro";
-import { getLocalPageLocations, locations, type Location } from "../data/locations";
+import { getLocalPageLocations, type Location } from "../data/locations";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { createTaxiServiceJsonLd } from "../utils/seo";
 
@@ -20,5 +20,5 @@ const { location } = Astro.props;
 
 <BaseLayout title={location.title} description={location.description}>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(createTaxiServiceJsonLd(location))}></script>
-  <LandingPage location={location} allLocations={locations} />
+  <LandingPage location={location} />
 </BaseLayout>
