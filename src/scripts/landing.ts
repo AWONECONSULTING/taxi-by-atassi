@@ -103,7 +103,6 @@ function setupHeader() {
 
     window.addEventListener("scroll", requestHeaderRender, { passive: true });
     desktopMedia.addEventListener("change", requestHeaderRender);
-    renderHeader();
   }
 }
 
@@ -133,8 +132,6 @@ function setupHero() {
     previousSlide.classList.add("leaving");
     previousSlide.setAttribute("aria-hidden", "true");
 
-    nextSlide.classList.remove("active");
-    void nextSlide.offsetWidth;
     nextSlide.classList.add("active");
     nextSlide.setAttribute("aria-hidden", "false");
 
@@ -198,7 +195,6 @@ function setupHeroParallax() {
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
   compactMedia.addEventListener("change", requestRender);
-  render();
 }
 
 function setupFinalCtaParallax() {
@@ -233,7 +229,6 @@ function setupFinalCtaParallax() {
   listenToScroll(requestRender);
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
-  render();
 }
 
 function setupReveals() {
@@ -345,7 +340,6 @@ function setupServicesPanel() {
   listenToScroll(requestRender);
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
-  render();
 }
 
 function setupDetailMediaMotion() {
@@ -423,7 +417,6 @@ function setupDetailMediaMotion() {
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
   compactMedia.addEventListener("change", requestRender);
-  render();
 }
 
 function setupSectionBridgeMotion() {
@@ -485,7 +478,6 @@ function setupSectionBridgeMotion() {
   window.addEventListener("resize", requestRender, { passive: true });
   reducedMotionMedia.addEventListener("change", requestRender);
   tabletMedia.addEventListener("change", requestRender);
-  render();
 }
 
 function setupPartnerMarquee() {
@@ -649,7 +641,6 @@ function setupBackToTop() {
   const update = () => button.classList.toggle("visible", getScrollTop() > 700);
   button.addEventListener("click", () => scrollSource.scrollTo({ top: 0, behavior: window.matchMedia(REDUCED_MOTION).matches ? "auto" : "smooth" }));
   listenToScroll(update);
-  update();
 }
 
 setupHeader();

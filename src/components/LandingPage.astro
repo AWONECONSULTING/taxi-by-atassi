@@ -81,7 +81,7 @@ const services = [
   </div>
   <div class="nav-wrap shell">
     <a class="nav-logo" href="/" aria-label="Taxi by Atassi, accueil">
-      <img src="/images/logo-nav.png" width="1000" height="452" alt="Taxi by Atassi" />
+      <img src="/images/logo-nav.webp" width="240" height="108" alt="Taxi by Atassi" fetchpriority="high" />
     </a>
     <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav" data-menu-toggle>
       <Icon name="menu" />
@@ -115,7 +115,7 @@ const services = [
         </a>
       </nav>
     </div>
-    <a class="nav-phone" href={`https://wa.me/${siteConfig.phoneRaw}`} target="_blank" rel="noopener noreferrer" aria-label={`Contacter Taxi by Atassi au ${siteConfig.phoneDisplay}`}>
+    <a class="nav-phone" href={`https://wa.me/${siteConfig.phoneRaw}`} target="_blank" rel="noopener noreferrer" aria-label={`Contacter Taxi by Atassi au +${siteConfig.phoneRaw}`}>
       <span class="nav-phone-icon"><Icon name="whatsapp" size={26} /></span>
       <span>+33636376596</span>
     </a>
@@ -127,7 +127,10 @@ const services = [
   <section id="accueil" class="hero" aria-label="Présentation" data-hero>
     {slides.map((slide, index) => (
       <article class:list={["hero-slide", { active: index === 0 }]} data-hero-slide aria-hidden={index === 0 ? "false" : "true"}>
-        <img src={slide.image} width="1368" height="768" alt="" fetchpriority={index === 0 ? "high" : "auto"} loading={index === 0 ? "eager" : "lazy"} />
+        <picture>
+          <source srcset={slide.image.replace(".webp", ".avif")} type="image/avif" />
+          <img src={slide.image} width="1368" height="768" alt="" fetchpriority={index === 0 ? "high" : "auto"} loading={index === 0 ? "eager" : "lazy"} decoding={index === 0 ? "sync" : "async"} />
+        </picture>
         <div class="hero-overlay"></div>
         <div class="hero-content shell">
           {index === 0 ? <h1>{slide.title}</h1> : <h2>{slide.title}</h2>}
@@ -149,7 +152,7 @@ const services = [
       <div class="partner-track">
         {[...partners, ...partners].map((partner, index) => (
           <div class="partner-logo" aria-hidden={index >= partners.length ? "true" : undefined}>
-            <img src={partner.src} width="300" height="300" alt={index < partners.length ? partner.alt : ""} loading="eager" decoding="async" />
+            <img src={partner.src} width="300" height="300" alt={index < partners.length ? partner.alt : ""} loading="lazy" decoding="async" />
           </div>
         ))}
       </div>
@@ -210,7 +213,7 @@ const services = [
         </ul>
         <a class="text-link" href="#reservation">Organiser mon trajet <Icon name="arrow" size={18} /></a>
       </div>
-      <figure class="detail-media"><div class="detail-image-clip"><img src="/images/service-taxi.webp" width="1024" height="1024" alt="Véhicule Taxi by Atassi à Toulouse" loading="lazy" /></div><span class="media-index">01</span></figure>
+      <figure class="detail-media"><div class="detail-image-clip"><picture><source srcset="/images/service-taxi.avif" type="image/avif" /><img src="/images/service-taxi.webp" width="1024" height="1024" alt="Véhicule Taxi by Atassi à Toulouse" loading="lazy" decoding="async" /></picture></div><span class="media-index">01</span></figure>
     </article>
 
     <article id="vsl" class="detail-row reverse reveal">
@@ -225,7 +228,7 @@ const services = [
         </ul>
         <a class="text-link" href="#reservation">Préparer mon transport <Icon name="arrow" size={18} /></a>
       </div>
-      <figure class="detail-media"><div class="detail-image-clip"><img src="/images/service-medical.webp" width="1024" height="1024" alt="Accompagnement pour un transport médical conventionné" loading="lazy" /></div><span class="media-index">02</span></figure>
+      <figure class="detail-media"><div class="detail-image-clip"><picture><source srcset="/images/service-medical.avif" type="image/avif" /><img src="/images/service-medical.webp" width="1024" height="1024" alt="Accompagnement pour un transport médical conventionné" loading="lazy" decoding="async" /></picture></div><span class="media-index">02</span></figure>
     </article>
 
     <article id="scolaire" class="detail-row reveal">
@@ -240,7 +243,7 @@ const services = [
         </ul>
         <a class="text-link" href="#reservation">Échanger sur vos besoins <Icon name="arrow" size={18} /></a>
       </div>
-      <figure class="detail-media"><div class="detail-image-clip"><img src="/images/service-scolaire.webp" width="1024" height="1024" alt="Transport scolaire accompagné en Haute-Garonne" loading="lazy" /></div><span class="media-index">03</span></figure>
+      <figure class="detail-media"><div class="detail-image-clip"><picture><source srcset="/images/service-scolaire.avif" type="image/avif" /><img src="/images/service-scolaire.webp" width="1024" height="1024" alt="Transport scolaire accompagné en Haute-Garonne" loading="lazy" decoding="async" /></picture></div><span class="media-index">03</span></figure>
     </article>
   </section>
 
@@ -295,15 +298,15 @@ const services = [
   <section id="chiffres" class="figures" aria-labelledby="figures-title">
     <div class="section-heading shell reveal"><p class="eyebrow">Nos chiffres clés</p><h2 id="figures-title">Les chiffres parlent d’eux-mêmes</h2></div>
     <div class="figure-grid shell">
-      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="meter" /></span><strong aria-label="Plus d’un million"><span aria-hidden="true">+ </span><span data-counter data-counter-value="1" aria-hidden="true">0</span><span aria-hidden="true">M</span></strong><span class="figure-label">Kilomètres parcourus</span></div>
-      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="team" /></span><strong aria-label="Plus de 2 599"><span aria-hidden="true">+ </span><span data-counter data-counter-value="2599" aria-hidden="true">0</span></strong><span class="figure-label">Personnes transportées</span></div>
-      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="taxi" /></span><strong aria-label="Plus de quatre"><span aria-hidden="true">+ </span><span data-counter data-counter-value="4" aria-hidden="true">0</span></strong><span class="figure-label">Taxis et chauffeurs</span></div>
-      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="happy" /></span><strong aria-label="99 pour cent"><span data-counter data-counter-value="99" aria-hidden="true">0</span><span aria-hidden="true">%</span></strong><span class="figure-label">Clients satisfaits</span></div>
+      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="meter" /></span><strong role="img" aria-label="Plus d’un million"><span aria-hidden="true">+ </span><span data-counter data-counter-value="1" aria-hidden="true">0</span><span aria-hidden="true">M</span></strong><span class="figure-label">Kilomètres parcourus</span></div>
+      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="team" /></span><strong role="img" aria-label="Plus de 2 599"><span aria-hidden="true">+ </span><span data-counter data-counter-value="2599" aria-hidden="true">0</span></strong><span class="figure-label">Personnes transportées</span></div>
+      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="taxi" /></span><strong role="img" aria-label="Plus de quatre"><span aria-hidden="true">+ </span><span data-counter data-counter-value="4" aria-hidden="true">0</span></strong><span class="figure-label">Taxis et chauffeurs</span></div>
+      <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="happy" /></span><strong role="img" aria-label="99 pour cent"><span data-counter data-counter-value="99" aria-hidden="true">0</span><span aria-hidden="true">%</span></strong><span class="figure-label">Clients satisfaits</span></div>
     </div>
   </section>
 
   <section class="final-cta" data-final-cta>
-    <img src="/images/voiture-3.webp" width="1368" height="768" alt="" loading="lazy" />
+    <picture><source srcset="/images/voiture-3.avif" type="image/avif" /><img src="/images/voiture-3.webp" width="1368" height="768" alt="" loading="lazy" decoding="async" /></picture>
     <div class="final-cta-overlay"></div>
     <div class="final-cta-content shell reveal"><p class="eyebrow light">Service disponible 24 heures sur 24</p><h2><span>Contactez-nous dès maintenant et réservez</span><span>votre taxi pour votre prochain trajet</span></h2><div class="hero-actions"><a class="button button-primary hero-button" href="#reservation">Je réserve ma course</a></div></div>
   </section>

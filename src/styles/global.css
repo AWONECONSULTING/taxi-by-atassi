@@ -56,7 +56,7 @@
   --bridge-float-radius: 0px;
   --bridge-float-diagonal-left: 0px;
   --bridge-float-left: 0px;
-  --final-cta-parallax-scale: 1;
+  --final-cta-parallax-scale: 1.07;
 }
 
 *,
@@ -116,6 +116,10 @@ a {
 img {
   display: block;
   max-width: 100%;
+}
+
+picture {
+  display: contents;
 }
 
 h1,
@@ -499,7 +503,9 @@ h3 {
   to { transform: translate3d(0, 100%, 0); }
 }
 
-.hero-slide > img {
+.hero-slide > img,
+.hero-slide > picture,
+.hero-slide > picture > img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1129,7 +1135,8 @@ h3 {
   will-change: transform;
 }
 
-.detail-media img {
+.detail-media img,
+.detail-media picture {
   position: absolute;
   top: -180px;
   left: 0;
@@ -1454,7 +1461,9 @@ h3 {
   color: white;
 }
 
-.final-cta > img {
+.final-cta > img,
+.final-cta > picture,
+.final-cta > picture > img {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -1615,12 +1624,14 @@ h3 {
   align-items: center;
   justify-content: space-between;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.56);
   font-size: 0.72rem;
 }
 
 .footer-bottom a {
   color: var(--orange);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .floating-controls {
