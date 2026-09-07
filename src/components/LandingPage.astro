@@ -88,11 +88,25 @@ const services = [
     </button>
     <div class="nav-drawer-clip">
       <nav id="main-nav" class="main-nav" aria-label="Navigation principale" data-nav>
-        <a href="/">Accueil</a>
-        <a href="#particulier">Taxi Pure</a>
-        <a href="#vsl">Taxi VSL</a>
-        <a href="#scolaire">Transport scolaire</a>
-        <a href="#contact">Contact</a>
+        <a href="#accueil">Accueil</a>
+        <a href="#partenaires">Nos partenaires</a>
+        <a href="#reservation">Réserver une course</a>
+        <div class="nav-services-group">
+          <div class="nav-services-row">
+            <a class="nav-services-link" href="#services">Nos services</a>
+            <button class="nav-services-toggle" type="button" aria-label="Afficher les sous-menus de Nos services" aria-expanded="false" aria-controls="nav-services-submenu" data-services-toggle>
+              <Icon name="arrow" size={16} />
+            </button>
+          </div>
+          <div id="nav-services-submenu" class="nav-services-submenu" data-services-submenu>
+            <a href="#particulier">Taxi Pure</a>
+            <a href="#vsl">Taxi VSL</a>
+            <a href="#scolaire">Transport scolaire</a>
+          </div>
+        </div>
+        <a href="#zones">Zones desservies</a>
+        <a href="#pourquoi-nous">Pourquoi nous</a>
+        <a href="#chiffres">Nos chiffres clés</a>
         <a class="nav-menu-email" href={`mailto:${siteConfig.email}`}>
           <Icon name="mail" size={18} />
           <span>{siteConfig.email}</span>
@@ -112,7 +126,7 @@ const services = [
 
 <div class="page-scroll" data-page-scroll>
 <main>
-  <section class="hero" aria-label="Présentation" data-hero>
+  <section id="accueil" class="hero" aria-label="Présentation" data-hero>
     {slides.map((slide, index) => (
       <article class:list={["hero-slide", { active: index === 0 }]} data-hero-slide aria-hidden={index === 0 ? "false" : "true"}>
         <img src={slide.image} width="1368" height="768" alt="" fetchpriority={index === 0 ? "high" : "auto"} loading={index === 0 ? "eager" : "lazy"} />
@@ -128,7 +142,7 @@ const services = [
     <button class="hero-arrow hero-next" type="button" aria-label="Voir le visuel suivant" data-hero-next><Icon name="arrow" size={36} /></button>
   </section>
 
-  <section class="partners" aria-labelledby="partners-title">
+  <section id="partenaires" class="partners" aria-labelledby="partners-title">
     <div class="section-heading shell reveal">
       <p class="eyebrow">Ils nous font confiance</p>
       <h2 id="partners-title">Nos partenaires</h2>
@@ -166,7 +180,7 @@ const services = [
     </div>
   </section>
 
-  <section class="services" aria-labelledby="services-title">
+  <section id="services" class="services" aria-labelledby="services-title">
     <div class="section-heading shell reveal">
       <p class="eyebrow">Des prestations adaptées à tous vos besoins</p>
       <h2 id="services-title">Nos services à votre disposition</h2>
@@ -232,7 +246,7 @@ const services = [
     </article>
   </section>
 
-  <section class="local-zone" aria-labelledby="service-areas-title">
+  <section id="zones" class="local-zone" aria-labelledby="service-areas-title">
     <div class="local-zone-inner shell reveal">
       <div>
         <p class="eyebrow light">{location.localEyebrow}</p>
@@ -271,7 +285,7 @@ const services = [
     </div>
   </div>
 
-  <section class="why-us dark-section" aria-labelledby="why-title">
+  <section id="pourquoi-nous" class="why-us dark-section" aria-labelledby="why-title">
     <div class="section-heading shell reveal"><p class="eyebrow light">Voyagez l’esprit tranquille</p><h2 id="why-title">Pourquoi choisir Taxi by Atassi ?</h2></div>
     <div class="benefit-grid shell">
       <article class="benefit reveal"><span class="benefit-icon"><BenefitIcon name="insurance" /></span><h3>Sécurité avant tout</h3><p>Nos véhicules sont entretenus avec rigueur et respectent toutes les normes pour garantir des trajets sûrs et sereins.</p></article>
@@ -280,7 +294,7 @@ const services = [
     </div>
   </section>
 
-  <section class="figures" aria-labelledby="figures-title">
+  <section id="chiffres" class="figures" aria-labelledby="figures-title">
     <div class="section-heading shell reveal"><p class="eyebrow">Nos chiffres clés</p><h2 id="figures-title">Les chiffres parlent d’eux-mêmes</h2></div>
     <div class="figure-grid shell">
       <div class="figure-card reveal"><span class="figure-icon"><StatIcon name="meter" /></span><strong aria-label="Plus d’un million"><span aria-hidden="true">+ </span><span data-counter data-counter-value="1" aria-hidden="true">0</span><span aria-hidden="true">M</span></strong><span class="figure-label">Kilomètres parcourus</span></div>

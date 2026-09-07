@@ -58,12 +58,20 @@ function setupSmoothScroll() {
 function setupHeader() {
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const nav = document.querySelector<HTMLElement>("[data-nav]");
+  const servicesToggle = document.querySelector<HTMLButtonElement>("[data-services-toggle]");
+  const servicesGroup = servicesToggle?.closest<HTMLElement>(".nav-services-group");
   if (!toggle || !nav) return;
+  const closeServices = () => {
+    servicesGroup?.classList.remove("open");
+    servicesToggle?.setAttribute("aria-expanded", "false");
+    servicesToggle?.setAttribute("aria-label", "Afficher les sous-menus de Nos services");
+  };
   const closeMenu = () => {
     nav.classList.remove("open");
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Ouvrir le menu");
     document.body.classList.remove("menu-open");
+    closeServices();
   };
 
   toggle.addEventListener("click", () => {
@@ -71,6 +79,12 @@ function setupHeader() {
     toggle.setAttribute("aria-expanded", String(isOpen));
     toggle.setAttribute("aria-label", isOpen ? "Fermer le menu" : "Ouvrir le menu");
     document.body.classList.toggle("menu-open", isOpen);
+  });
+
+  servicesToggle?.addEventListener("click", () => {
+    const isOpen = servicesGroup?.classList.toggle("open") ?? false;
+    servicesToggle.setAttribute("aria-expanded", String(isOpen));
+    servicesToggle.setAttribute("aria-label", `${isOpen ? "Masquer" : "Afficher"} les sous-menus de Nos services`);
   });
 
   nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
