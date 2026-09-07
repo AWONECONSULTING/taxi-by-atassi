@@ -42,6 +42,8 @@
   --detail-index-opacity: 0;
   --detail-index-x: 0px;
   --detail-index-scale: 1;
+  --detail-card-x: 0px;
+  --detail-card-opacity: 1;
   --bridge-line-progress: 0;
   --bridge-outline-progress: 0;
   --bridge-shadow-y: 18px;
@@ -2247,7 +2249,6 @@ h3 {
   }
   .hero {
     --hero-parallax-scale: 1.08;
-    height: 100vh;
     height: 100svh;
     min-height: 0;
   }
