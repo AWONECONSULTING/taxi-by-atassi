@@ -56,6 +56,7 @@ function setupSmoothScroll() {
 }
 
 function setupHeader() {
+  const header = document.querySelector<HTMLElement>(".site-header");
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const nav = document.querySelector<HTMLElement>("[data-nav]");
   const servicesToggle = document.querySelector<HTMLButtonElement>("[data-services-toggle]");
@@ -88,6 +89,22 @@ function setupHeader() {
   });
 
   nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+
+  if (header) {
+    const desktopMedia = window.matchMedia("(min-width: 841px)");
+    let headerFrame = 0;
+    const renderHeader = () => {
+      headerFrame = 0;
+      header.classList.toggle("scrolled", desktopMedia.matches && window.scrollY > 90);
+    };
+    const requestHeaderRender = () => {
+      if (!headerFrame) headerFrame = window.requestAnimationFrame(renderHeader);
+    };
+
+    window.addEventListener("scroll", requestHeaderRender, { passive: true });
+    desktopMedia.addEventListener("change", requestHeaderRender);
+    renderHeader();
+  }
 }
 
 function setupHero() {
