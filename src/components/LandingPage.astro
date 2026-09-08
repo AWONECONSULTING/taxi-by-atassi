@@ -173,8 +173,16 @@ const services = [
         <label><span>Nombre de passagers</span><input type="number" name="passengers" min="1" max="8" placeholder="Nombre de passagers" required /></label>
         <label><span>Adresse de départ</span><input type="text" name="departure" autocomplete="street-address" placeholder="Adresse de départ" required /></label>
         <label><span>Adresse d’arrivée</span><input type="text" name="arrival" placeholder="Adresse d’arrivée" required /></label>
-        <label><span>Date souhaitée</span><input type="date" name="date" required /></label>
-        <label><span>Heure souhaitée</span><input type="time" name="time" required /></label>
+        <label class="booking-date-field">
+          <span>Date souhaitée</span>
+          <input type="date" name="date" aria-label="Date souhaitée" required />
+          <Icon name="calendar" size={20} />
+        </label>
+        <label class="booking-date-field">
+          <span>Heure souhaitée</span>
+          <input type="time" name="time" aria-label="Heure souhaitée" required />
+          <Icon name="clock" size={20} />
+        </label>
         <button class="button button-primary booking-submit" type="submit">Réserver maintenant <Icon name="arrow" size={19} /></button>
         <p class="form-note" data-form-note aria-live="polite"></p>
       </form>
