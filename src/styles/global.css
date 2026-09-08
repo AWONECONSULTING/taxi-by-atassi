@@ -858,17 +858,27 @@ h3 {
 .booking-form .booking-date-field > span {
   position: absolute;
   z-index: 1;
-  top: 12px;
+  top: 50%;
   left: 26px;
   width: auto;
   height: auto;
   overflow: visible;
   clip: auto;
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 11px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 16px;
   font-weight: 500;
   line-height: 1;
   pointer-events: none;
+  transform: translateY(-50%);
+  transition: top 180ms ease, color 180ms ease, font-size 180ms ease, transform 180ms ease;
+}
+
+.booking-form .booking-date-field:has(input:focus) > span,
+.booking-form .booking-date-field:has(input:valid) > span {
+  top: 12px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 11px;
+  transform: none;
 }
 
 .booking-date-field > svg {
@@ -921,6 +931,8 @@ h3 {
   min-width: 0;
   padding: 19px 58px 0 26px;
   color: white;
+  appearance: none;
+  -webkit-appearance: none;
   -webkit-text-fill-color: white;
 }
 
@@ -2644,8 +2656,12 @@ h3 {
     font-size: 15px;
   }
   .booking-form .booking-date-field > span {
-    top: 9px;
     left: 20px;
+    font-size: 15px;
+  }
+  .booking-form .booking-date-field:has(input:focus) > span,
+  .booking-form .booking-date-field:has(input:valid) > span {
+    top: 9px;
     font-size: 10px;
   }
   .booking-form .booking-date-field input {
