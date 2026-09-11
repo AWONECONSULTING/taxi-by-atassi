@@ -928,6 +928,11 @@ h3 {
   -webkit-text-fill-color: white;
 }
 
+.booking-form .booking-date-field input:not(:valid)::-webkit-datetime-edit {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
 .booking-form input::-webkit-calendar-picker-indicator {
   position: absolute;
   inset: 0;
